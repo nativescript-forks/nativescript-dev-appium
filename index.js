@@ -28,11 +28,7 @@ exports.createDriver = function (caps, activityName) {
 
 exports.getAppPath = function () {
     console.log("testRunType " + testRunType);
-    if (testRunType === "android19") {
-        console.log("GLOB: " + glob);
-        var apks = glob.sync("platforms/android/build/outputs/apk/*.apk").filter(function (file) { return file.indexOf("unaligned") < 0; });
-        return apks[0];
-    } else if (testRunType === "android23") {
+    if (testRunType.startsWith("android")) {
         console.log("GLOB: " + glob);
         var apks = glob.sync("platforms/android/build/outputs/apk/*.apk").filter(function (file) { return file.indexOf("unaligned") < 0; });
         return apks[0];
@@ -52,6 +48,8 @@ exports.getDefaultCapabilities = function () {
         return exports.caps.android19();
     } else if (testRunType === "android23") {
         return exports.caps.android23();
+    } else if (testRunType === "android24") {
+        return exports.caps.android24();
     } else if (testRunType === "ios-simulator") {
         return exports.caps.ios10();
     } else if (testRunType === "ios") {
@@ -97,6 +95,17 @@ exports.caps = {
             "appium-version": appiumVerion,
             platformName: "Android",
             platformVersion: "6.0",
+            deviceName: "Android Emulator",
+            noReset: false, //Always reinstall app on Android
+            app: undefined // will be set later
+        };
+    },
+    android24: function () {
+        return {
+            browserName: "",
+            "appium-version": appiumVerion,
+            platformName: "Android",
+            platformVersion: "7.0",
             deviceName: "Android Emulator",
             noReset: false, //Always reinstall app on Android
             app: undefined // will be set later
