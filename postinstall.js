@@ -2,7 +2,7 @@ var path = require("path");
 var fs = require("fs");
 var childProcess = require("child_process");
 
-var projectDir = path.resolve(__dirname, "../", "../");
+var projectDir = path.resolve(path.dirname(__dirname));
 var testsDir = path.join(projectDir, "e2e-tests");
 var packageJsonPath = path.join(projectDir, "package.json");
 

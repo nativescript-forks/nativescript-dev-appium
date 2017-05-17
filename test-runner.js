@@ -6,6 +6,8 @@ var child_process = require("child_process");
 
 var verbose = process.env.npm_config_loglevel === "verbose";
 var testRunType = process.env.npm_config_runtype || "android24";
+var appiumVersion = process.env.npm_config_appiumversion || "1.6.3";
+
 function log(message) {
     if (verbose) {
         console.log(message);
@@ -62,7 +64,7 @@ mochaOpts = [
 var server, tests;
 portastic.find({ min: 9200, max: 9300 }).then(function (ports) {
     var port = ports[0];
-    server = child_process.spawn(appiumBinary, ["-p", port, "--no-reset"], { detached: false });
+    server = child_process.spawn(appiumBinary, ["-p", port, "--no-reset", "--log-level", "warn"], { detached: false });
 
     server.stdout.on("data", function (data) {
         logOut("" + data);
@@ -76,7 +78,7 @@ portastic.find({ min: 9200, max: 9300 }).then(function (ports) {
         process.exit();
     });
 
-    waitForOutput(server, /listener started/, 180000).then(function () {
+    waitForOutput(server, /listener started/, 60000).then(function () {
         process.env.APPIUM_PORT = port;
         tests = child_process.spawn(mochaBinary, mochaOpts, { shell: true, detached: false, env: getTestEnv() });
         tests.stdout.on('data', function (data) {
@@ -133,6 +135,7 @@ function killPid(pid) {
 function getTestEnv() {
     var testEnv = JSON.parse(JSON.stringify(process.env));
     testEnv.TEST_RUN_TYPE = testRunType;
+    testEnv.APPIUM_VERSION = appiumVersion;
     if (verbose) {
         testEnv.VERBOSE_LOG = "true";
     }

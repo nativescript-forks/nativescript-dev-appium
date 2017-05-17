@@ -2,7 +2,7 @@ require("./appium-setup");
 var glob = require("glob");
 
 var testRunType = process.env.TEST_RUN_TYPE;
-const appiumVerion = "1.6.3";
+const appiumVerion = testEnv.APPIUM_VERSION;
 var wd = require("wd");
 
 exports.createDriver = function (caps, activityName) {
